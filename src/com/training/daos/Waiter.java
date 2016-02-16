@@ -54,6 +54,7 @@ public class Waiter implements RestDAO<OrderInfo> {
 				pstmt2.setInt(1, t.getOrderNo());
 				pstmt2.setInt(2, (int) pair.getKey());
 				pstmt2.setInt(3, (int) pair.getValue());
+				rowAdded += pstmt2.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -101,7 +102,7 @@ public class Waiter implements RestDAO<OrderInfo> {
 	@Override
 	public String checkOrderStatus(int orderNo) {
 		String orderStatus = null;
-		String sql = "select * from ORDERINFO where ORDERID=?";
+		String sql = "select * from ORDERINFO where ORDERNO=?";
 		OrderInfo orderInfo = null;
 		try{
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -119,7 +120,7 @@ public class Waiter implements RestDAO<OrderInfo> {
 	@Override
 	public String checkPaymentStatus(int orderNo) {
 		String paymentStatus = null;
-		String sql = "select * from ORDERINFO where ORDERID=?";
+		String sql = "select * from ORDERINFO where ORDERNO=?";
 		OrderInfo orderInfo = null;
 		try{
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -153,16 +154,17 @@ public class Waiter implements RestDAO<OrderInfo> {
 
 	@Override
 	public int deleteOrder(int orderNo) {
-		String sql1 = "DELETE FROM ORDERINFO WHERE ORDERID = ?";
+		String sql1 = "DELETE FROM ORDERINFO WHERE ORDERNO = ?";
 		String sql2 = "DELETE FROM ORDERTEMPDETAILS WHERE ORDERID = ?";
 		int rowDeleted = 0;
 		try{
+			PreparedStatement pstmt2 = con.prepareStatement(sql2);
+			pstmt2.setInt(1, orderNo);
+			rowDeleted += pstmt2.executeUpdate();
 			PreparedStatement pstmt1 = con.prepareStatement(sql1);
 			pstmt1.setInt(1, orderNo);
 			rowDeleted = pstmt1.executeUpdate();
-			PreparedStatement pstmt2 = con.prepareStatement(sql2);
-			pstmt1.setInt(1, orderNo);
-			rowDeleted += pstmt2.executeUpdate();
+
 			//set to constructor
 		} catch (Exception e){
 			e.printStackTrace();

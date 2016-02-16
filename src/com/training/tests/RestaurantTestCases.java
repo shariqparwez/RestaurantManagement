@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.training.daos.Waiter;
@@ -31,6 +32,7 @@ public class RestaurantTestCases {
 		System.out.println(orderInfo);
 	}
 	
+	@Ignore
 	@Test
 	public void test2() {
 		HashMap<Integer,Integer> test = new HashMap<>();
@@ -38,6 +40,27 @@ public class RestaurantTestCases {
 		test.put(202, 1);
 		orderInfo = new OrderInfo(104,11,4,"PENDING","UNPAID", test);
 		waiter.addOrder(orderInfo);
+	}
+	
+	@Test
+	public void test3() {
+		System.out.println(waiter.checkOrderStatus(11));
+	}
+	
+	@Test
+	public void test4() {
+		System.out.println(waiter.checkPaymentStatus(11));
+	}
+	
+	@Ignore
+	@Test
+	public void test5() {
+		waiter.deleteOrder(11);
+	}
+	
+	@Test
+	public void test6(){
+		waiter.deleteOrderItems(11, 202);
 	}
 
 }
