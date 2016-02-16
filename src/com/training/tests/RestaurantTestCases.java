@@ -31,22 +31,22 @@ public class RestaurantTestCases {
 		orderInfo = waiter.getOrderDetails(10);
 		System.out.println(orderInfo);
 	}
-	
-	@Ignore
 	@Test
 	public void test2() {
 		HashMap<Integer,Integer> test = new HashMap<>();
-		test.put(101, 2);
-		test.put(202, 1);
-		orderInfo = new OrderInfo(104,11,4,"PENDING","UNPAID", test);
+		test.put(201, 2);
+		test.put(302, 1);
+		orderInfo = new OrderInfo(103,11,1,"PENDING","UNPAID", test);
 		waiter.addOrder(orderInfo);
 	}
 	
+	@Ignore
 	@Test
 	public void test3() {
 		System.out.println(waiter.checkOrderStatus(11));
 	}
 	
+	@Ignore
 	@Test
 	public void test4() {
 		System.out.println(waiter.checkPaymentStatus(11));
@@ -58,9 +58,16 @@ public class RestaurantTestCases {
 		waiter.deleteOrder(11);
 	}
 	
+	@Ignore
 	@Test
 	public void test6(){
 		waiter.deleteOrderItems(11, 202);
+	}
+	
+	@Ignore
+	@Test
+	public void test7(){
+		System.out.println(waiter.getMenuItem(501));
 	}
 
 }

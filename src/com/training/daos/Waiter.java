@@ -32,6 +32,7 @@ public class Waiter implements RestDAO<OrderInfo> {
 
 	@Override
 	public int addOrder(OrderInfo t) {
+		ArrayList<String> menuItem = new ArrayList<>();
 		String sql1 = "insert into ORDERINFO values(?,?,?,?,?)";
 		String sql2 = "insert into ORDERTEMPDETAILS values(?,?,?)";
 
@@ -55,7 +56,9 @@ public class Waiter implements RestDAO<OrderInfo> {
 				pstmt2.setInt(2, (int) pair.getKey());
 				pstmt2.setInt(3, (int) pair.getValue());
 				rowAdded += pstmt2.executeUpdate();
+				menuItem.add(getMenuItem((int) pair.getKey()));
 			}
+			t.setMenuItems(menuItem);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -64,6 +67,7 @@ public class Waiter implements RestDAO<OrderInfo> {
 	
 	@Override
 	public OrderInfo getOrderDetails(int orderNo) {
+		ArrayList<String> menuItem = new ArrayList<>();
 		int orderId = 0, empId = 0, tableNo = 0, menuCode = 0, quantity = 0;
 		String status = null, payment = null;
 		OrderInfo orderInfo = null;
@@ -89,9 +93,10 @@ public class Waiter implements RestDAO<OrderInfo> {
 				//System.out.println("in rs2");
 				//System.out.println(rs2.getInt("MENUCODE"));
 				menuCodes.put(rs2.getInt("MENUCODE"),rs2.getInt("QUANTITY"));
+				menuItem.add(getMenuItem(rs2.getInt("MENUCODE")));
 			}
 			
-			orderInfo = new OrderInfo(empId,orderId,tableNo,status,payment,menuCodes);
+			orderInfo = new OrderInfo(empId,orderId,tableNo,status,payment,menuCodes,menuItem);
 
 		} catch(Exception e){
 			e.printStackTrace();
@@ -186,6 +191,22 @@ public class Waiter implements RestDAO<OrderInfo> {
 			e.printStackTrace();
 		}
 		return rowDeleted;
+	}
+	
+	public String getMenuItem(int menuCode){
+		String menuDetail = null;
+		String sql = "select * from MENUITEMS where MENUCODE=?";
+		try{
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, menuCode);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+				menuDetail = rs.getString("DISHNAME");
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return menuDetail;
 	}
 
 }
