@@ -1,0 +1,83 @@
+CREATE table "EMPLOYEE" (
+    "EMPID"       NUMBER(3,0),
+    "EMPNAME"     VARCHAR2(30),
+    "PHONENO"     NUMBER(10,0),
+    "DESIGNATION" VARCHAR2(25),
+    constraint  "EMPLOYEE_PK" primary key ("EMPID")
+)
+/
+
+
+CREATE table "USERINFO" (
+    "EMPID"      NUMBER(3,0),
+    "USERNAME"   VARCHAR2(15),
+    "PASSWORD"   VARCHAR2(15),
+    "ROLE"       VARCHAR2(25),
+    constraint  "USERINFO_PK" primary key ("EMPID")
+)
+/
+
+ALTER TABLE "USERINFO" ADD CONSTRAINT "USERINFO_FK" 
+FOREIGN KEY ("EMPID")
+REFERENCES "EMPLOYEE" ("EMPID")
+
+/
+
+CREATE table "ORDERINFO" (
+    "ORDERNO"    NUMBER(2,0),
+    "EMPID"      NUMBER(3,0),
+    "TABLENO"    NUMBER(2,0),
+    "STATUS"     VARCHAR2(20),
+    "PAYMENT"    VARCHAR2(20),
+    constraint  "ORDERINFO_PK" primary key ("ORDERNO")
+)
+/
+
+ALTER TABLE "ORDERINFO" ADD CONSTRAINT "ORDERINFO_FK" 
+FOREIGN KEY ("EMPID")
+REFERENCES "EMPLOYEE" ("EMPID")
+
+/
+alter table "ORDERINFO" add
+constraint "ORDERINFO_CK1" 
+check (STATUS IN("PENDING","COMPLETED");)
+/   
+alter table "ORDERINFO" add
+constraint "ORDERINFO_CK2" 
+check (PAYMENT IN("UNPAID","PAID");)
+/   
+
+CREATE table "MENUITEMS" (
+    "MENUCODE"   NUMBER(3,0),
+    "DISHNAME"   VARCHAR2(100),
+    "CATEGORY"   VARCHAR2(30),
+    "PRICE"      NUMBER(4,0),
+    constraint  "MENUITEMS_PK" primary key ("MENUCODE")
+)
+/
+
+alter table "MENUITEMS" add
+constraint "MENUITEMS_CK1" 
+check (CATEGORY in('NonVeg','Veg','Starters','Desserts','Beverages'))
+/   
+
+CREATE table "ORDERTEMPDETAILS" (
+    "ORDERID"    NUMBER(2,0) NOT NULL,
+    "MENUCODE"   NUMBER(3,0) NOT NULL,
+    "QUANTITY"   NUMBER(2,0) NOT NULL
+)
+/
+
+alter table "ORDERTEMPDETAILS" add constraint  "ORDERTEMPDETAILS_PK" primary key ("ORDERID","MENUCODE")
+/
+
+ALTER TABLE "ORDERTEMPDETAILS" ADD CONSTRAINT "ORDERTEMPDETAILS_FK" 
+FOREIGN KEY ("ORDERID")
+REFERENCES "ORDERINFO" ("ORDERNO")
+
+/
+ALTER TABLE "ORDERTEMPDETAILS" ADD CONSTRAINT "ORDERTEMPDETAILS_FK2" 
+FOREIGN KEY ("MENUCODE")
+REFERENCES "MENUITEMS" ("MENUCODE")
+
+/
